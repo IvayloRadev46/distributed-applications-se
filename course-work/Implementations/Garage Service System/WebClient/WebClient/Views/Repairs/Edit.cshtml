@@ -1,0 +1,53 @@
+﻿@model Garage.WebClient.Models.RepairModel
+
+@{
+    ViewData["Title"] = "Редактирай ремонт";
+}
+
+<h2 class="text-light">@ViewData["Title"]</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-action="Edit" method="post" class="text-light">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label"></label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option>Scheduled</option>
+            <option>InProgress</option>
+            <option>Completed</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CarId" class="form-label">Автомобил</label>
+        <select asp-for="CarId" asp-items="ViewBag.Cars" class="form-select"></select>
+        <span asp-validation-for="CarId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Запиши</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>

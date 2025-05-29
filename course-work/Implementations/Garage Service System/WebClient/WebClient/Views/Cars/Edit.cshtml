@@ -1,0 +1,54 @@
+﻿@model Garage.WebClient.Models.CarModel
+
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"]?.ToString() == "Edit" ? "Редактиране на автомобил" : "Добавяне на автомобил";
+    var isEdit = ViewContext.RouteData.Values["action"]?.ToString() == "Edit";
+}
+
+<h2 class="text-light">@ViewData["Title"]</h2>
+
+<form asp-action="@(isEdit ? "Edit" : "Create")" method="post" class="text-light">
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+
+    <div class="mb-3">
+        <label class="form-label">VIN</label>
+        <input asp-for="VIN" class="form-control" />
+        <span asp-validation-for="VIN" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Рег. номер</label>
+        <input asp-for="LicensePlate" class="form-control" />
+        <span asp-validation-for="LicensePlate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Модел</label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Година</label>
+        <input asp-for="ManufactureYear" type="number" class="form-control" />
+        <span asp-validation-for="ManufactureYear" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Клиент</label>
+        <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-control">
+            <option value="">-- Избери клиент --</option>
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">@(isEdit ? "Запази" : "Запиши")</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <p class="text-danger fw-bold">@ViewBag.Error</p>
+}

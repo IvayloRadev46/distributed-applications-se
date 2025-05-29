@@ -1,0 +1,113 @@
+﻿@model List<Garage.WebClient.Models.CarModel>
+
+<h2>Автомобили</h2>
+
+<form method="get" class="mb-3 d-flex align-items-center">
+    <div class="input-group me-2">
+        <input type="text" name="query" class="form-control" placeholder="Търси по VIN, регистрация, модел или клиент..." value="@Context.Request.Query["query"]" />
+        <button type="submit" class="btn btn-primary">🔍 Търси</button>
+    </div>
+    <label class="me-2 text-nowrap">Покажи по:</label>
+    <input type="hidden" name="page" value="1" />
+    <select name="pageSize" class="form-select w-auto" onchange="this.form.submit()">
+        <option value="5" selected="@(ViewBag.PageSize == 5 ? "selected" : null)">5</option>
+        <option value="10" selected="@(ViewBag.PageSize == 10 ? "selected" : null)">10</option>
+        <option value="25" selected="@(ViewBag.PageSize == 25 ? "selected" : null)">25</option>
+    </select>
+</form>
+
+
+
+<p>
+    <a href="/Cars/Create" class="btn btn-primary">➕ Добави автомобил</a>
+</p>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}
+else if (!Model.Any())
+{
+    <p>Няма налични автомобили.</p>
+}
+else
+{
+    <table class="table table-striped">
+        @{
+            string currentSort = ViewBag.CurrentSort as string ?? "";
+            string currentOrder = ViewBag.CurrentOrder as string ?? "asc";
+            string Toggle(string s) => currentSort == s && currentOrder == "asc" ? "desc" : "asc";
+            string Arrow(string s) => currentSort == s ? (currentOrder == "asc" ? "↑" : "↓") : "";
+        }
+
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sort="vin" asp-route-order="@Toggle("vin")" asp-route-page="@ViewBag.CurrentPage" asp-route-query="@Context.Request.Query["query"]" asp-route-pageSize="@ViewBag.PageSize" class="sortable-link">
+                        VIN @Arrow("vin")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort="licensePlate" asp-route-order="@Toggle("licensePlate")" asp-route-page="@ViewBag.CurrentPage" asp-route-query="@Context.Request.Query["query"]" asp-route-pageSize="@ViewBag.PageSize" class="sortable-link">
+                        Рег. № @Arrow("licensePlate")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort="model" asp-route-order="@Toggle("model")" asp-route-page="@ViewBag.CurrentPage" asp-route-query="@Context.Request.Query["query"]" asp-route-pageSize="@ViewBag.PageSize" class="sortable-link">
+                        Модел @Arrow("model")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort="year" asp-route-order="@Toggle("year")" asp-route-page="@ViewBag.CurrentPage" asp-route-query="@Context.Request.Query["query"]" asp-route-pageSize="@ViewBag.PageSize" class="sortable-link">
+                        Година @Arrow("year")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort="client" asp-route-order="@Toggle("client")" asp-route-page="@ViewBag.CurrentPage" asp-route-query="@Context.Request.Query["query"]" asp-route-pageSize="@ViewBag.PageSize" class="sortable-link">
+                        Клиент @Arrow("client")
+                    </a>
+                </th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.VIN</td>
+                    <td>@car.LicensePlate</td>
+                    <td>@car.Model</td>
+                    <td>@car.ManufactureYear</td>
+                    <td>@car.ClientFullName</td>
+                    <td>
+                        <a href="/Cars/Edit/@car.Id" class="btn btn-sm btn-warning">Редактирай</a>
+                        <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш този автомобил?');">
+                            <input type="hidden" name="id" value="@car.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Изтрий</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Навигация по страници">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-sort="@ViewBag.CurrentSort"
+                       asp-route-order="@ViewBag.CurrentOrder"
+                       asp-route-query="@Context.Request.Query["query"]"
+                       asp-route-pageSize="@ViewBag.PageSize">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

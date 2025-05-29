@@ -1,0 +1,92 @@
+﻿@model Garage.WebClient.Models.CarModel
+
+@{
+    ViewData["Title"] = "Създаване на кола";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default .select2-selection--single {
+        background-color: #1e1e1e;
+        border-color: #444;
+        color: #fff;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        background-color: #1e1e1e;
+        color: #fff;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+</style>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="VIN" class="control-label"></label>
+        <input asp-for="VIN" class="form-control" />
+        <span asp-validation-for="VIN" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LicensePlate" class="control-label"></label>
+        <input asp-for="LicensePlate" class="form-control" />
+        <span asp-validation-for="LicensePlate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Model" class="control-label"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ManufactureYear" class="control-label"></label>
+        <input asp-for="ManufactureYear" class="form-control" />
+        <span asp-validation-for="ManufactureYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FirstRegistrationDate" class="control-label"></label>
+        <input asp-for="FirstRegistrationDate" class="form-control" type="date" />
+        <span asp-validation-for="FirstRegistrationDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ClientId" class="control-label">Клиент</label>
+        <select asp-for="ClientId" class="form-control select-client" asp-items="ViewBag.Clients"></select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Запази</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('.select-client').select2({
+                placeholder: "Изберете клиент",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
+}

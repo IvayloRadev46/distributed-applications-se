@@ -1,0 +1,39 @@
+﻿@model List<Garage.WebClient.Models.RepairModel>
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<h2>Моите ремонти</h2>
+
+@if (!Model.Any())
+{
+    <p>Нямате активни ремонти.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Описание</th>
+                <th>Статус</th>
+                <th>Цена</th>
+                <th>Начална дата</th>
+                <th>Крайна дата</th>
+                <th>Автомобил</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var repair in Model)
+            {
+                <tr>
+                    <td>@repair.Description</td>
+                    <td>@repair.Status</td>
+                    <td>@repair.Price.ToString("")</td>
+                    <td>@repair.StartDate.ToString("dd.MM.yyyy")</td>
+                    <td>@(repair.EndDate.HasValue ? repair.EndDate.Value.ToString("dd.MM.yyyy") : "-")</td>
+                    <td>@repair.CarModel</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

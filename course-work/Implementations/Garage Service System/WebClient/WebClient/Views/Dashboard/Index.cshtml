@@ -1,0 +1,85 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-light"> Табло с данни</h2>
+</div>
+
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-secondary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Общо клиенти</h5>
+                <h2>@ViewBag.ClientCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-secondary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Общо автомобили</h5>
+                <h2>@ViewBag.CarCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-secondary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Текущи ремонти</h5>
+                <h2>@ViewBag.RepairCount</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (ViewBag.RecentRepairs is List<Garage.WebClient.Models.RepairModel> recentRepairs && recentRepairs.Any())
+{
+    <h4 class="text-light mt-4"> Последни ремонти</h4>
+    <table class="table table-dark table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Описание</th>
+                <th>Автомобил</th>
+                <th>Статус</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var repair in recentRepairs)
+            {
+                <tr>
+                    <td>@repair.Description</td>
+                    <td>@repair.CarModel</td>
+                    <td>@repair.Status</td>
+                    <td>@repair.StartDate.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@if (ViewBag.RepairStatusStats is Dictionary<string, int> stats)
+{
+    <h4 class="text-light mt-5"> Статистика по статус на ремонтите</h4>
+    <ul class="list-group mb-4">
+        @foreach (var kv in stats)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-white">
+                @kv.Key
+                <span class="badge bg-primary rounded-pill">@kv.Value</span>
+            </li>
+        }
+    </ul>
+}
+
+
+<div class="d-flex justify-content-around mb-5">
+    <a class="btn btn-outline-light" href="/Clients">👥 Виж клиенти</a>
+    <a class="btn btn-outline-light" href="/Cars">🚗 Виж автомобили</a>
+    <a class="btn btn-outline-light" href="/Repairs">🛠️ Виж ремонти</a>
+</div>
